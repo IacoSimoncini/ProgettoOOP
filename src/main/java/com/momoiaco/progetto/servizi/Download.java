@@ -24,9 +24,9 @@ import java.util.Map;
  */
 @Service
 public class Download {
-    private List<NottiNazione> record = new ArrayList<>();
+    public static List<NottiNazione> record = new ArrayList<>();
     private final static String TAB_DELIMITER = "\t";
-    private List<Map> Lista = new ArrayList();
+    public static List<Map> Lista = new ArrayList();
 
     /**
      * Costruttore della classe Download
