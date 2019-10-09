@@ -24,9 +24,9 @@ import java.util.Map;
  */
 @Service
 public class Download {
-    public static List<NottiNazione> record = new ArrayList<>();
+    protected static List<NottiNazione> record = new ArrayList<>();        //Lista di oggetti NottiNazione
     private final static String TAB_DELIMITER = "\t";
-    public static List<Map> Lista = new ArrayList();
+    protected static List<Map> Lista = new ArrayList();                    //Lista per i Metadata
 
     /**
      * Costruttore della classe Download
@@ -65,7 +65,7 @@ public class Download {
                         String format = (String) o1.get("format");                      //Mi sposto all'interno del JSON per trovare l'url desiderato
                         String urlD = (String) o1.get("url");
 
-                        if (format.equals("http://publications.europa.eu/resource/authority/file-type/TSV")) { //Verifico che il formato sia quello richiesto
+                        if (format.equals("http://publications.europa.eu/resource/authority/file-type/TSV")) {          //Verifico che il formato sia quello richiesto
                             try (InputStream input = URI.create(url).toURL().openStream()) {
                                 Files.copy(input, Paths.get(fileTSV));
                             }
@@ -97,7 +97,7 @@ public class Download {
                 linea = linea.replace("c", "");      //Sostituisce "c" con ""
                 linea = linea.replace("u", "");      //Sostituisce "u" con ""
                 String[] lineaSplittata = linea.trim().split(TAB_DELIMITER);    //Separa la linea tutte le volte che incontra il tab
-                String c_resid = lineaSplittata[0].trim();              //Toglie gli spazi prima e dopo la stringa
+                String c_resid = lineaSplittata[0].trim();              //Trim toglie gli spazi prima e dopo la stringa
                 String unit = lineaSplittata[1].trim();
                 String nace_r2 = lineaSplittata[2].trim();
                 String geo = lineaSplittata[3].trim();
@@ -122,9 +122,9 @@ public class Download {
         Field[] fields = NottiNazione.class.getDeclaredFields();    //Estrae le variabili della classe NottiNazione
         BufferedReader bR = new BufferedReader(new FileReader(fileTSV));         //Apre il bufferedReader
         String linea = bR.readLine();           //Legge la prima riga
-        linea = linea.replace(",", TAB_DELIMITER);     //Sostituisce alla prima linea tutte le virgole con "\t"
-        String[] lineaSplittata = linea.trim().split(TAB_DELIMITER);     //Separa la stringa tutte le volte che incontra tab
-        lineaSplittata = linea.trim().split("\"");      //Separa la stringa quando c'è il back slash
+        linea = linea.replace(",", TAB_DELIMITER);     //Sostituisce alla prima linea tutte le "," con "\t"
+        String[] lineaSplittata = linea.trim().split(TAB_DELIMITER);     //Separa la stringa tutte le volte che incontra "\t"
+        lineaSplittata = linea.trim().split("\"");      //Separa la stringa quando c'è il "\"
         int i = 0;
 
         for (Field f : fields) {
