@@ -24,9 +24,9 @@ import java.util.Map;
  */
 @Service
 public class Download {
-    protected static List<NottiNazione> record = new ArrayList<>();        //Lista di oggetti NottiNazione
+    public static List<NottiNazione> record = new ArrayList<>();        //Lista di oggetti NottiNazione
     private final static String TAB_DELIMITER = "\t";
-    protected static List<Map> Lista = new ArrayList();                    //Lista per i Metadata
+    public static List<Map> Lista = new ArrayList();                    //Lista per i Metadata
 
     /**
      * Costruttore della classe Download
