@@ -4,7 +4,9 @@ import com.momoiaco.progetto.modello.NottiNazione;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -24,12 +26,13 @@ import java.util.Map;
  */
 @Service
 public class Download {
-    public static List<NottiNazione> record = new ArrayList<>();        //Lista di oggetti NottiNazione
+    private static List<NottiNazione> record = new ArrayList<>();        //Lista di oggetti NottiNazione
     private final static String TAB_DELIMITER = "\t";
-    public static List<Map> Lista = new ArrayList();                    //Lista per i Metadata
+    private static List<Map> Lista = new ArrayList();                    //Lista per i Metadata
 
     /**
      * Costruttore della classe Download
+     *
      * @throws IOException
      */
     public Download() throws IOException {
@@ -84,6 +87,7 @@ public class Download {
 
     /**
      * Metodo che effettua il parsing del file tsv
+     *
      * @param fileTSV  Stringa con il nome del file tsv
      */
     private void Parsing(String fileTSV){
@@ -115,6 +119,7 @@ public class Download {
 
     /**
      * Metodo per la creazione dei metadati
+     *
      * @param fileTSV   Stringa con il nome del file tsv
      * @throws IOException
      */
@@ -136,4 +141,49 @@ public class Download {
             i++;
         }
     }
+
+    /**
+     * Metodo che restituisce il record
+     *
+     * @return record
+     */
+    public List<NottiNazione> getRecord(){
+        return record;
+    }
+
+    /**
+     * Metodo che restituisce una lista di String contenente gli anni
+     *
+     * @return anni
+     */
+    public List getAnni(){
+        List<String> anni = new ArrayList<>();
+        for(int i = 0; i < NottiNazione.differenza_anni; i++)
+            anni.add(Integer.toString(2007+i));
+        return anni;
+    }
+
+    /**
+     * Metodo che restituisce la lista dei metadati
+     *
+     * @return Lista
+     */
+    public List<Map> getMetadata(){
+        return Lista;
+    }
+
+    /**
+     * Metodo che restituisce il record all'indice i
+     *
+     * @param i
+     * @return
+     */
+    public NottiNazione getRecord(int i){
+        if(i < Download.record.size()) return Download.record.get(i);
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Oggetto di indice " + i + " non esiste!");
+    }
+
+    /*public getStatistics(String stringa){
+
+    }*/
 }

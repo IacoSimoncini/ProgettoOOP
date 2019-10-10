@@ -8,11 +8,11 @@ import java.util.Map;
  * Classe Statistics
  * restituisce statistiche sui dati informato JSON
  */
-
 public abstract  class Statistics {
 
     /**
      * Metodo avg
+     *
      * @param lista
      * @return  restituisce la media della lista
      */
@@ -22,6 +22,7 @@ public abstract  class Statistics {
 
     /**
      * Metodo min
+     *
      * @param lista
      * @return restituisce il minimo della lista
      */
@@ -35,6 +36,7 @@ public abstract  class Statistics {
 
     /**
      * Metodo max
+     *
      * @param lista
      * @return restituisce il massimo di una lista
      */
@@ -48,6 +50,7 @@ public abstract  class Statistics {
 
     /**
      * Metodo devStd
+     *
      * @param lista
      * @return restituisce la deviazione standard
      */
@@ -62,6 +65,7 @@ public abstract  class Statistics {
 
     /**
      * Metodo sum
+     *
      * @param lista
      * @return restituisce la somma degli elementi della lista
      */
@@ -75,6 +79,7 @@ public abstract  class Statistics {
 
     /**
      * Metodo count
+     *
      * @param lista
      * @return restituisce la lunghezza della lista
      */
@@ -84,6 +89,7 @@ public abstract  class Statistics {
 
     /**
      * Metodo contaElementiUnici
+     *
      * @param lista
      * @return restituisce il numero degli elementi unici
      */
@@ -95,8 +101,4 @@ public abstract  class Statistics {
         }
         return mappa;
     }
-
-
-
-
 }

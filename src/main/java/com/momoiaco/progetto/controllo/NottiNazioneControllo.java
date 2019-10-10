@@ -3,28 +3,34 @@ package com.momoiaco.progetto.controllo;
 import com.momoiaco.progetto.modello.NottiNazione;
 import com.momoiaco.progetto.servizi.Download;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.momoiaco.progetto.modello.NottiNazione.differenza_anni;
 
 @RestController
 public class NottiNazioneControllo {
+    private Download service;
 
+    /**
+     * Costruttore della classe NottiNazioneControllo
+     *
+     * @param service
+     */
+    @Autowired
+    public NottiNazioneControllo (Download service){
+        this.service = service;
+    }
     /**
      * Metodo GET che su richiesta dell'utente restituisce l'intero dataset
      *
      * @return "record" ovvero la lista con gli oggetti del dataset
      */
-    @GetMapping("/getData")
+    @GetMapping("/getRecord")
     public List getRecord(){
-        return Download.record;
+        return service.getRecord();
     }
 
     /**
@@ -34,10 +40,7 @@ public class NottiNazioneControllo {
      */
     @GetMapping("/getAnni")
     public List getAnni(){
-        List<String> anni = new ArrayList<>();
-        for(int i = 0; i < differenza_anni; i++)
-            anni.add(Integer.toString(2007+i));
-        return anni;
+        return service.getAnni();
     }
 
     /**
@@ -47,25 +50,25 @@ public class NottiNazioneControllo {
      */
     @GetMapping("/getMetadati")
     public List getMetadati(){
-        return Download.Lista;
+        return service.getMetadata();
     }
 
     /**
      * Metodo GET che su richiesta dell'utente restituisce un elemento all'indice i della lista "record" che contiene gli oggetti NottiNazione
+     *
      * @param i indice della lista che si vuole ottenere
      * @return "record" ovvero la lista con gli oggetti NottiNazione
      */
     @GetMapping("/getRecord[i]")
     public NottiNazione getNottiNazione(@PathVariable int i){
-        if(i < Download.record.size()) return Download.record.get(i);
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Oggetto di indice " + i + " non esiste!");
+        return service.getRecord(i);
     }
+
 
     /*@GetMapping("/getStatistiche")
-    public List getStatistiche(@RequestParam(value = "Campo", required = false, defaultValue = "") String nomeCampo) {
+    public List getStatistiche(@RequestParam(value = "Field", required = false, defaultValue = "") String nameField) {
+        if(!nameField.equals("")) {
+            List<Map> lista = new ArrayList<>();
 
-    }
-
-    @GetMapping("")
-    */
+    }    */
 }
