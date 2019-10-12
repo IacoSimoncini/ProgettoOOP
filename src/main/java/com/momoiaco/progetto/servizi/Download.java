@@ -10,11 +10,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.net.URI;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,48 +43,77 @@ public class Download {
         else {
             String url = "http://data.europa.eu/euodp/data/api/3/action/package_show?id=CLfXgIIz02XfA2MTjWgjSQ";
             try {
-                URLConnection openConnection = new URL(url).openConnection();                           //Apro connessione ad url della mail
-                openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36");
-                InputStream inStream = openConnection.getInputStream();
-                StringBuilder data = new StringBuilder();
-                String line;
+                URLConnection openConnection = new URL(url).openConnection();
+                openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+                InputStream in = openConnection.getInputStream();
+
+                String data = "";
+                String line = "";
                 try {
-                    //Lettura JSON e salvataggio su stringa
-                    InputStreamReader inR = new InputStreamReader(inStream);
-                    BufferedReader buf = new BufferedReader(inR);
-                    while ((line = buf.readLine()) != null) {                           //Basterebbe anche una sola lettura poichè il JSON è su una sola riga
-                        data.append(line);
+                    InputStreamReader inR = new InputStreamReader( in );
+                    BufferedReader buf = new BufferedReader( inR );
+
+                    while ( ( line = buf.readLine() ) != null ) {
+                        data+= line;
+                        System.out.println( line );
                     }
                 } finally {
-                    inStream.close();
+                    in.close();
                 }
                 //Conversione StringBuilder in oggetto JSON
                 JSONObject obj = (JSONObject) JSONValue.parseWithException(data.toString());
                 JSONObject objI = (JSONObject) (obj.get("result"));
                 JSONArray objA = (JSONArray) (objI.get("resources"));
 
-                for (Object o : objA) {                                                 //Scorro tutti gli oggetti fino a trovare quello di formato corretto
+                for (Object o : objA) {
                     if (o instanceof JSONObject) {
-                        JSONObject o1 = (JSONObject) o;                                 //Converto il generico Object in JSONObject
-                        String format = (String) o1.get("format");                      //Mi sposto all'interno del JSON per trovare l'url desiderato
+                        JSONObject o1 = (JSONObject) o;
+                        String format = (String) o1.get("format");
                         String urlD = (String) o1.get("url");
-
-                        if (format.equals("http://publications.europa.eu/resource/authority/file-type/TSV")) {          //Verifico che il formato sia quello richiesto
-                            try (InputStream input = URI.create(url).toURL().openStream()) {
-                                Files.copy(input, Paths.get(fileTSV));
-                            }
+                        System.out.println(format + " | " + urlD);
+                        if (format.toLowerCase().contains("tsv")) {
+                            //downloadTSV(urlD, fileName);
+                            downloadTSV(urlD, fileTSV);
                         }
                     }
                 }
-                System.out.println("Download del TSV effettuato");
+                System.out.println("OK");
+            } catch (IOException | ParseException e) {
+                e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Parsing(fileTSV); //Effettua il parsing tramite il metodo "Parsing"
-            Metadata(fileTSV); //Richiama metodo per la creazione dei metadati
         }
+        Parsing(fileTSV);
+        Metadata(fileTSV);
     }
 
+    /**
+     * Metodo che gestisce un problema di redirect del sito che gestisce i dati
+     *
+     * @param url url del sito dal quale scaricare il file
+     * @param fileName nome del file
+     * @throws Exception
+     */
+    public static void downloadTSV(String url, String fileName) throws Exception {
+        HttpURLConnection openConnection = (HttpURLConnection) new URL(url).openConnection();
+        openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+        InputStream in = openConnection.getInputStream();
+        String data = "";
+        String line = "";
+        try {
+            if(openConnection.getResponseCode() >= 300 && openConnection.getResponseCode() < 400) {
+                downloadTSV(openConnection.getHeaderField("Location"),fileName);
+                in.close();
+                openConnection.disconnect();
+                return;
+            }
+            Files.copy(in, Paths.get(fileName));
+            System.out.println("File size " + Files.size(Paths.get(fileName)));
+            } finally {
+                in.close();
+            }
+    }
 
     /**
      * Metodo che effettua il parsing del file tsv
@@ -94,20 +124,25 @@ public class Download {
         try(BufferedReader bRead = new BufferedReader(new FileReader(fileTSV))){
             bRead.readLine();                  //Legge una riga a vuoto per saltare l'intestazione
             String linea;
+            int a;
             while((linea = bRead.readLine()) != null) {                 //Ciclo che continua fintanto che non trova una linea nulla
                 linea = linea.replace(",", TAB_DELIMITER);       //Sostituisce le virgole con i tab "\t"
                 linea = linea.replace(":","0");      //Sostituisce i ":" con "0"
                 linea = linea.replace("e","");       //Sostituisce "e" con ""
                 linea = linea.replace("c", "");      //Sostituisce "c" con ""
                 linea = linea.replace("u", "");      //Sostituisce "u" con ""
-                String[] lineaSplittata = linea.trim().split(TAB_DELIMITER);    //Separa la linea tutte le volte che incontra il tab
-                String c_resid = lineaSplittata[0].trim();              //Trim toglie gli spazi prima e dopo la stringa
+                linea = linea.replace("b","");
+                String[] lineaSplittata = linea.trim().split(TAB_DELIMITER);             //Separa la linea tutte le volte che incontra il tab
+                String c_resid = lineaSplittata[0].trim();                                     //Trim toglie gli spazi prima e dopo la stringa
                 String unit = lineaSplittata[1].trim();
                 String nace_r2 = lineaSplittata[2].trim();
                 String geo = lineaSplittata[3].trim();
                 double[] valori = new double[NottiNazione.differenza_anni];
-                for(int i = 0; i < NottiNazione.differenza_anni; i++){
-                    valori[i] = Double.parseDouble(lineaSplittata[4 + i].trim());       //Inserisce i valori della tabella dentro il vettore
+                for(int i = 0; i < NottiNazione.differenza_anni; i++) {
+                    if (4 + i < lineaSplittata.length)                               //Gestione errore java.lang.ArrayIndexOutOfBoundsException
+                        valori[i] = Double.parseDouble(lineaSplittata[4 + i].trim());       //Inserisce i valori della tabella dentro il vettore
+                    else
+                        valori[i] = 0;                                                      //Per i valori che non ci sono dopo lineaSplittata aggiunge "0"
                 }
                 NottiNazione oggettoParsato = new NottiNazione(c_resid, unit, nace_r2, geo, valori);
                 record.add(oggettoParsato);         //Aggiungo oggettoParsato alla lista
@@ -128,8 +163,8 @@ public class Download {
         BufferedReader bR = new BufferedReader(new FileReader(fileTSV));         //Apre il bufferedReader
         String linea = bR.readLine();           //Legge la prima riga
         linea = linea.replace(",", TAB_DELIMITER);     //Sostituisce alla prima linea tutte le "," con "\t"
+        linea = linea.replace("\\", TAB_DELIMITER);     //Sostituisce alla prima linea \ con tab
         String[] lineaSplittata = linea.trim().split(TAB_DELIMITER);     //Separa la stringa tutte le volte che incontra "\t"
-        lineaSplittata = linea.trim().split("\"");      //Separa la stringa quando c'è il "\"
         int i = 0;
 
         for (Field f : fields) {
@@ -184,6 +219,5 @@ public class Download {
     }
 
     /*public getStatistics(String stringa){
-
     }*/
 }
