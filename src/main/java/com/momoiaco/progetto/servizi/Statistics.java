@@ -103,7 +103,13 @@ public abstract  class Statistics {
         return mappa;
     }
 
-
+    /**
+     * Metodo get che restituisce tutte le statistiche relative ad un campo
+     *
+     * @param nomeCampo
+     * @param lista
+     * @return
+     */
     public static Map<String, Object> getAllStatistics(String nomeCampo, List lista){
         Map<String, Object> mappa = new HashMap<>();
         mappa.put("field",nomeCampo);

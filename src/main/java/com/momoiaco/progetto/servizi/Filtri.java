@@ -1,6 +1,7 @@
 package com.momoiaco.progetto.servizi;
 
 
+import com.momoiaco.progetto.modello.NottiNazione;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -120,11 +121,11 @@ public abstract class Filtri {
      * @param rif valore di riferimento
      * @return lista che soddisfano il filtro
      */
-    public static List<Integer> filtra(List val, String oper, Object rif) {
-        List<Integer> filtrati = new ArrayList<>();
+    public static List<NottiNazione> filtra(List val, String oper, Object rif) {
+        List<NottiNazione> filtrati = new ArrayList<>();
         for (int i = 0; i < val.size(); i++) {
             if (check(val.get(i), oper, rif))//controllo per ogni elemento della lista
-                filtrati.add(i);
+                filtrati.add((NottiNazione) val.get(i));
         }
         return filtrati; // restituisco la lista con gli indici
     }

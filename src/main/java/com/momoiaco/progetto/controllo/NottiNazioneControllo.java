@@ -38,9 +38,9 @@ public class NottiNazioneControllo {
      *
      * @return "anni" ovvero una lista di string
      */
-    @GetMapping("/getAnni")
+    @GetMapping("/getTime")
     public List getAnni() {
-        return service.getAnni();
+        return service.getTime();
     }
 
     /**
@@ -64,17 +64,6 @@ public class NottiNazioneControllo {
         return service.getRecord(i);
     }
 
-    /**
-     *
-     *
-     * @param nameField
-     * @return
-     */
-    /*@GetMapping("/getStatistiche")
-    public List getStatistiche(@RequestParam(value = "Field", required = false, defaultValue = "") String nameField) {
-        if (!nameField.equals("")) {
-            List<Map> lista = new ArrayList<>();
-            lista.add()
-        }
-    }*/
+
+
 }

@@ -10,6 +10,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -30,6 +32,7 @@ public class Download {
     private static List<NottiNazione> record = new ArrayList<>();        //Lista di oggetti NottiNazione
     private final static String TAB_DELIMITER = "\t";
     private static List<Map> Lista = new ArrayList();                    //Lista per i Metadata
+    static List<String> time = new ArrayList<>();
 
     /**
      * Costruttore della classe Download
@@ -38,6 +41,8 @@ public class Download {
      */
     public Download() throws IOException {
         String fileTSV = "dataset.tsv";
+        for(int i = 0; i < NottiNazione.differenza_anni; i++)       //Inizializzo il vettore tempo
+            time.add(Integer.toString(2007+i));
         if (Files.exists(Paths.get(fileTSV)))
             System.out.println("Dataset ricaricato da locale");
         else {
@@ -170,8 +175,8 @@ public class Download {
         for (Field f : fields) {
             Map<String, String> map = new HashMap<>();
             map.put("Alias", f.getName());      //Aggiunge alla mappa la chiave alias
-            map.put("sourceField", lineaSplittata[i]);    //Prende il nome del campo nel file tsv
-            map.put("type", f.getType().getSimpleName());   //Prende il tipo di dato e lo inserisce nella mappa
+            map.put("SourceField", lineaSplittata[i]);    //Prende il nome del campo nel file tsv
+            map.put("Type", f.getType().getSimpleName());   //Prende il tipo di dato e lo inserisce nella mappa
             Lista.add(map);             //Aggiunge la mappa alla lista "Lista"
             i++;
         }
@@ -191,12 +196,7 @@ public class Download {
      *
      * @return anni
      */
-    public List getAnni(){
-        List<String> anni = new ArrayList<>();
-        for(int i = 0; i < NottiNazione.differenza_anni; i++)
-            anni.add(Integer.toString(2007+i));
-        return anni;
-    }
+    public List getTime(){ return time;  }
 
     /**
      * Metodo che restituisce la lista dei metadati
@@ -218,17 +218,43 @@ public class Download {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Oggetto di indice " + i + " non esiste!");
     }
 
-    /*public List<Map> getStatistics(){
-        Field[] fields = NottiNazione.class.getDeclaredFields();
-        List<Map> listStats = new ArrayList<>();
-        for(Field f : fields){
-            String fieldName = f.getName();
-            if(fieldName.equals("valori"))
-                for(int i = 0; i < NottiNazione.differenza_anni; i++)
-                    listStats.add(getStatistics(Integer.toString(2007+i)));
-                else
-                    listStats.add(getStatistics(fieldName));
+
+
+    public List getField(String nomeCampo) {
+        List<Object> listField = new ArrayList<>(); //inizializzo lista che conterrà i valori del campo
+        try {
+            /*
+            Gestisco il caso in cui il nome del campo sia un anno:
+            In questo caso verifico se sia uno degli anni all'interno del vettore time
+            Se questo è vero allora inserisco dentro dentro "ob" i valori relativi al nome del campo inserito
+             */
+            if(time.contains(nomeCampo)){
+                for(NottiNazione notti : record){
+                    Object ob= notti.getValori()[Integer.parseInt(nomeCampo)-2000]; //considero solo l'elemento che mi interessa del metodo get
+                    listField.add(ob);
+                }
+            }
+            /*
+            Nel caso in cui il nome del campo non sia un anno:
+            Scorro tutti gli oggetti all'interno della classe record e vado ad estrarre
+            i valori del campo relativo al nome del campo inserito dall'utente.
+            All'interno del ciclo viene caricato l'oggetto relativo al campo da
+             */
+            else {
+                //serve per scorrere tutti gli oggetti ed estrarre i valori del campo nomeCampo
+                for (NottiNazione notti : record) {
+                    Method getter = NottiNazione.class.getMethod("get" + nomeCampo.substring(0, 1).toUpperCase() + nomeCampo.substring(1)); //costruisco il metodo get del modello di riferimento
+                    Object value = getter.invoke(record); //invoco il metodo get sull'oggetto della classe modellante
+                    listField.add(value); //aggiungo il valore alla lista
+                }
+            }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, nomeCampo + " non esiste.");
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
         }
-    return listStats;
-    }*/
+        return listField; //ritorno la lista
+    }
+
 }
