@@ -21,10 +21,10 @@ public abstract class Filtri {
                     switch (operation) {
                         case "$not":
                             return valueNum != rifNum;
-                        case "$and":
+                        /*case "$and":
                             return  ;
                         case "$or":
-                            return  ;
+                            return  ;*/
                         case "$gt":
                             return valueNum > rifNum;
                         case "$gte":
@@ -95,7 +95,8 @@ public abstract class Filtri {
                     } else
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La lista è vuota o non contiene stringhe");
                 } else
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Riferimento:'" + reference + "' non compatibile con il valore'" + value + "'");           } else
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Riferimento:'" + reference + "' non compatibile con il valore'" + value + "'");
+            }
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valore da controllare non valido: '" + value + "'");
         } else
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Operatore non valido: " + operation);
@@ -104,9 +105,6 @@ public abstract class Filtri {
     public static List<String> getOperatori() {
         return operatori;
     }
-
-}
-
 
     public static List<Integer> filtra(List val, String oper, Object rif) {
         List<Integer> filtrati = new ArrayList<>();

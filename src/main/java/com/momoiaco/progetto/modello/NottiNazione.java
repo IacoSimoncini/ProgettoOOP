@@ -29,7 +29,7 @@ public class NottiNazione implements Serializable {     //Serializable permette 
     }
 
     /**
-     * Metodi get per C_resid
+     * Metodo get per C_resid
      * @return
      */
     public String getC_resid() {
@@ -45,7 +45,7 @@ public class NottiNazione implements Serializable {     //Serializable permette 
     }
 
     /**
-     * Metodi get per getNace_r2
+     * Metodo get per getNace_r2
      * @return
      */
     public String getNace_r2() {
@@ -53,12 +53,18 @@ public class NottiNazione implements Serializable {     //Serializable permette 
     }
 
     /**
-     * Metodi get per geo
+     * Metodo get per geo
      * @return
      */
     public String getGeo() {
         return geo;
     }
+
+    /**
+     * Metodo get per valori
+     * @return
+     */
+    public double[] getValori(){ return valori; }
 
     /**
      * Metodo toString che restituisce il record

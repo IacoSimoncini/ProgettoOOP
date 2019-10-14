@@ -54,7 +54,7 @@ public class Download {
                     BufferedReader buf = new BufferedReader( inR );
 
                     while ( ( line = buf.readLine() ) != null ) {
-                        data+= line;
+                        data += line;
                         System.out.println( line );
                     }
                 } finally {
@@ -214,10 +214,21 @@ public class Download {
      * @return
      */
     public NottiNazione getRecord(int i){
-        if(i < Download.record.size()) return Download.record.get(i);
+        if(i < record.size()) return record.get(i);
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Oggetto di indice " + i + " non esiste!");
     }
 
-    /*public getStatistics(String stringa){
+    /*public List<Map> getStatistics(){
+        Field[] fields = NottiNazione.class.getDeclaredFields();
+        List<Map> listStats = new ArrayList<>();
+        for(Field f : fields){
+            String fieldName = f.getName();
+            if(fieldName.equals("valori"))
+                for(int i = 0; i < NottiNazione.differenza_anni; i++)
+                    listStats.add(getStatistics(Integer.toString(2007+i)));
+                else
+                    listStats.add(getStatistics(fieldName));
+        }
+    return listStats;
     }*/
 }

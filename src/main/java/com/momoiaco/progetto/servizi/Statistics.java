@@ -1,5 +1,6 @@
 package com.momoiaco.progetto.servizi;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +99,31 @@ public abstract  class Statistics {
         for (Object obj : lista){
             Integer numero = mappa.get(0);
             mappa.put(obj, ( numero == null ? 1 : numero +1));
+        }
+        return mappa;
+    }
+
+
+    public static Map<String, Object> getAllStatistics(String nomeCampo, List lista){
+        Map<String, Object> mappa = new HashMap<>();
+        mappa.put("field",nomeCampo);
+        if(!lista.isEmpty()){
+            if(lista.get(0) instanceof Number){
+                List<Double> listaNumer = new ArrayList<>();
+                for(Object oggetto : lista){
+                    listaNumer.add((Double) oggetto);
+                }
+                mappa.put("avg", avg(listaNumer));
+                mappa.put("min", min(listaNumer));
+                mappa.put("max", max(listaNumer));
+                mappa.put("std", devStd(listaNumer));
+                mappa.put("sum", sum(listaNumer));
+                mappa.put("count", count(listaNumer));
+                return mappa;
+            } else {
+                mappa.put("elementiUnici", contaElementiUnici(lista));
+                mappa.put("count", count(lista));
+            }
         }
         return mappa;
     }

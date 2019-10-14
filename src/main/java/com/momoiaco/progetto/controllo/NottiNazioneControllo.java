@@ -2,7 +2,6 @@ package com.momoiaco.progetto.controllo;
 
 import com.momoiaco.progetto.modello.NottiNazione;
 import com.momoiaco.progetto.servizi.Download;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,16 +19,17 @@ public class NottiNazioneControllo {
      * @param service
      */
     @Autowired
-    public NottiNazioneControllo (Download service){
+    public NottiNazioneControllo(Download service) {
         this.service = service;
     }
+
     /**
      * Metodo GET che su richiesta dell'utente restituisce l'intero dataset
      *
      * @return "record" ovvero la lista con gli oggetti del dataset
      */
     @GetMapping("/getRecord")
-    public List getRecord(){
+    public List getRecord() {
         return service.getRecord();
     }
 
@@ -39,7 +39,7 @@ public class NottiNazioneControllo {
      * @return "anni" ovvero una lista di string
      */
     @GetMapping("/getAnni")
-    public List getAnni(){
+    public List getAnni() {
         return service.getAnni();
     }
 
@@ -49,7 +49,7 @@ public class NottiNazioneControllo {
      * @return "Lista" ovvero la lista nella classe Download che contiene i metadata
      */
     @GetMapping("/getMetadati")
-    public List getMetadati(){
+    public List getMetadati() {
         return service.getMetadata();
     }
 
@@ -59,16 +59,22 @@ public class NottiNazioneControllo {
      * @param i indice della lista che si vuole ottenere
      * @return "record" ovvero la lista con gli oggetti NottiNazione
      */
-    @GetMapping("/getRecord[i]")
-    public NottiNazione getNottiNazione(@PathVariable int i){
+    @GetMapping("/getRecord/{i}")
+    public NottiNazione getNottiNazione(@PathVariable int i) {
         return service.getRecord(i);
     }
 
-
+    /**
+     *
+     *
+     * @param nameField
+     * @return
+     */
     /*@GetMapping("/getStatistiche")
     public List getStatistiche(@RequestParam(value = "Field", required = false, defaultValue = "") String nameField) {
-        if(!nameField.equals("")) {
+        if (!nameField.equals("")) {
             List<Map> lista = new ArrayList<>();
-
-    }    */
+            lista.add()
+        }
+    }*/
 }
