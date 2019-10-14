@@ -257,4 +257,20 @@ public class Download {
         return listField; //ritorno la lista
     }
 
+
+
+    public List<Map> getAllFieldStatistics(){
+        Field[] fields = NottiNazione.class.getDeclaredFields();
+        List<Map> list = new ArrayList<>();
+        for(Field campo : fields){
+            String fieldName = campo.getName();
+            if(fieldName.equals("record"))
+                for(int i = 0; i < NottiNazione.differenza_anni; i++)
+                    list.add(Statistics.getAllStatistics(fieldName, getField(fieldName)));
+            else
+                list.add(Statistics.getAllStatistics(fieldName, getField(fieldName)));
+        }
+        return list;
+    }
+    
 }
