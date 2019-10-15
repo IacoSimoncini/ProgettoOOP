@@ -218,8 +218,12 @@ public class Download {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Oggetto di indice " + i + " non esiste!");
     }
 
-
-
+    /**
+     *
+     *
+     * @param nomeCampo
+     * @return
+     */
     public List getField(String nomeCampo) {
         List<Object> listField = new ArrayList<>(); //inizializzo lista che conterrà i valori del campo
         try {
@@ -244,7 +248,7 @@ public class Download {
                 //serve per scorrere tutti gli oggetti ed estrarre i valori del campo nomeCampo
                 for (NottiNazione notti : record) {
                     Method getter = NottiNazione.class.getMethod("get" + nomeCampo.substring(0, 1).toUpperCase() + nomeCampo.substring(1)); //costruisco il metodo get del modello di riferimento
-                    Object value = getter.invoke(record); //invoco il metodo get sull'oggetto della classe modellante
+                    Object value = getter.invoke(notti); //invoco il metodo get sull'oggetto della classe modellante
                     listField.add(value); //aggiungo il valore alla lista
                 }
             }
@@ -257,9 +261,11 @@ public class Download {
         return listField; //ritorno la lista
     }
 
-
-
-
+    /**
+     *
+     *
+     * @return
+     */
     public List<Map> getAllFieldStatistics(){
         Field[] fields = NottiNazione.class.getDeclaredFields();
         List<Map> list = new ArrayList<>();
@@ -274,5 +280,20 @@ public class Download {
         return list;
     }
 
-    //CREARE METODO GET PER LA RESTITUZIONE DI UNA LISTA DI OGGETTI FILTRATI
+    /**
+     *
+     *
+     * @param nameField
+     * @param operator
+     * @param reference
+     * @return
+     */
+    public List<NottiNazione> getFilteredRecord(String nameField, String operator, Object reference) {
+        List<NottiNazione> filteredList = Filtri.filtra(getField(nameField), operator, reference);
+        /**List<NottiNazione> filtered = new ArrayList<>();
+        for (NottiNazione Notti : filteredList) {
+            filtered.add(record.
+        }*/
+        return filteredList;
+    }
 }

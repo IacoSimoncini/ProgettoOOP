@@ -97,8 +97,8 @@ public abstract  class Statistics {
     public static Map<Object,Integer> contaElementiUnici(List lista){
         Map<Object, Integer> mappa = new HashMap<>();
         for (Object obj : lista){
-            Integer numero = mappa.get(0);
-            mappa.put(obj, ( numero == null ? 1 : numero +1));
+            Integer numero = mappa.get(obj);
+            mappa.put(obj, ( numero == null ? 1 : numero + 1));
         }
         return mappa;
     }

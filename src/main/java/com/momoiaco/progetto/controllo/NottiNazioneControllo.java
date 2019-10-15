@@ -2,9 +2,12 @@ package com.momoiaco.progetto.controllo;
 
 import com.momoiaco.progetto.modello.NottiNazione;
 import com.momoiaco.progetto.servizi.Download;
+import com.momoiaco.progetto.servizi.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.json.BasicJsonParser;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,37 +68,54 @@ public class NottiNazioneControllo {
 
 
     @GetMapping("/getStatistiche")
-    public List getStatistiche(@RequestParam(value = "Field", required = false, defaultValue = "") String nameField) {
-        if(nameField.equals(""))
-            return service.getAllFieldStatistics();
-        else {
-            return service.getField(nameField);
-        }
+    public Map getStatistiche(@RequestParam(value = "Field", required = false, defaultValue = "") String nameField) {
+        return Statistics.getAllStatistics(nameField, service.getField(nameField));
     }
 
     //METODI POST
 
-    //CREARE METODO GETFILTEREDSTATISTICS
 
-    //CREARE PARSING FILTRO
 
+    /**
+     * Metodo get che restituisce il record filtrato passando il body al metodo
+     *
+     * @param body body
+     * @return
+     */
     @PostMapping("/getFilteredRecord")
     public List getFilteredRecord(@RequestBody String body){
-        Map<String, Object> filter = parsingFiltro (body);
+        Map<String, Object> filter = parsingFilter(body);
         String nameField = (String) filter.get("field");
-        String oper = (String) filter.get("oper");
-        Object rif = filter.get("rif");
-        return service.getFilteredRecord(nameField, oper, rif);
+        String oper = (String) filter.get("operator");
+        Object reference = filter.get("reference");
+        return service.getFilteredRecord(nameField, oper, reference);
     }
 
-
-
-
-
-
-
-
-
-
+    /**
+     * Metodo che effettua il parsing del filtro
+     *
+     * @param body body
+     * @return filter, restituisce la mappa filtro
+     */
+    public Map<String, Object> parsingFilter(String body){
+        Map<String, Object> bodyParsato = new BasicJsonParser().parseMap(body);
+        String nameField = bodyParsato.keySet().toArray(new String[0])[0];
+        Object value = bodyParsato.get(nameField);
+        String operator;
+        Object reference;
+        if(value instanceof Map){
+            Map filter = (Map) value;
+            operator = ((String) filter.keySet().toArray()[0]).toLowerCase();
+            reference = filter.get(operator);
+        } else {
+            operator = "$gte";
+            reference = value;
+        }
+        Map<String, Object> filter = new HashMap<>();
+        filter.put("operator", operator);
+        filter.put("reference", reference);
+        filter.put("field", nameField);
+        return filter;
+    }
 
 }
