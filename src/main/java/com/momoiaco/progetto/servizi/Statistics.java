@@ -113,10 +113,10 @@ public abstract  class Statistics {
     public static Map<String, Object> getAllStatistics(String nomeCampo, List lista){
         Map<String, Object> mappa = new HashMap<>();
         mappa.put("field",nomeCampo);
-        if(!lista.isEmpty()){
+        if(!lista.isEmpty()){                                       //Se la lista non è vuota
             if(lista.get(0) instanceof Number){
                 List<Double> listaNumer = new ArrayList<>();
-                for(Object oggetto : lista){
+                for(Object oggetto : lista){                        //Ciclo che scorre gli oggetti
                     listaNumer.add((Double) oggetto);
                 }
                 mappa.put("avg", avg(listaNumer));

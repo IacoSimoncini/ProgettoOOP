@@ -43,7 +43,7 @@ public abstract class Filtri {
                             return valueNum <= rifNum;
                         default:
                             String erroreOper = "L'operatore: '" + operation + "' risulta non funzionante per gli operandi: '" + value + "' , '" + reference + "'";
-                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, erroreOper);//restituisce il messaggio di errore in formato JSON
+                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, erroreOper);          //restituisce il messaggio di errore in formato JSON
                     }
                 } else if (reference instanceof List) {                     //Riferimento risulta essere una lista
                     List rifL = ((List) reference);

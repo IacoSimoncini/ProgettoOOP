@@ -14,11 +14,11 @@ public class NottiNazione implements Serializable {     //Serializable permette 
 
     /**
      * Costruttore della classe NottiNazione
-     * @param c_resid
-     * @param unit
-     * @param nace_r2
-     * @param geo
-     * @param valori
+     * @param c_resid c_resid
+     * @param unit unit
+     * @param nace_r2 nace_r2
+     * @param geo geo
+     * @param valori valori
      */
     public NottiNazione (String c_resid, String unit, String nace_r2, String geo, double[] valori) {
         this.c_resid = c_resid;
@@ -30,7 +30,7 @@ public class NottiNazione implements Serializable {     //Serializable permette 
 
     /**
      * Metodo get per C_resid
-     * @return
+     * @return c_resid
      */
     public String getC_resid() {
         return c_resid;
@@ -38,7 +38,7 @@ public class NottiNazione implements Serializable {     //Serializable permette 
 
     /**
      * Metodo get per Unit
-     * @return
+     * @return unit
      */
     public String getUnit() {
         return unit;
@@ -46,7 +46,7 @@ public class NottiNazione implements Serializable {     //Serializable permette 
 
     /**
      * Metodo get per getNace_r2
-     * @return
+     * @return nace_r2
      */
     public String getNace_r2() {
         return nace_r2;
@@ -54,7 +54,7 @@ public class NottiNazione implements Serializable {     //Serializable permette 
 
     /**
      * Metodo get per geo
-     * @return
+     * @return geo
      */
     public String getGeo() {
         return geo;
@@ -62,7 +62,7 @@ public class NottiNazione implements Serializable {     //Serializable permette 
 
     /**
      * Metodo get per valori
-     * @return
+     * @return valori
      */
     public double[] getValori(){ return valori; }
 

@@ -108,7 +108,7 @@ public class Download {
         String line = "";
         try {
             if(openConnection.getResponseCode() >= 300 && openConnection.getResponseCode() < 400) {
-                downloadTSV(openConnection.getHeaderField("Location"),fileName);
+                downloadTSV(openConnection.getHeaderField("Location"),fileName);        //Richiama il metodo downloadTSV
                 in.close();
                 openConnection.disconnect();
                 return;
@@ -127,7 +127,7 @@ public class Download {
      */
     private void Parsing(String fileTSV){
         try(BufferedReader bRead = new BufferedReader(new FileReader(fileTSV))){
-            bRead.readLine();                  //Legge una riga a vuoto per saltare l'intestazione
+            bRead.readLine();                                  //Legge una riga a vuoto per saltare l'intestazione
             String linea;
             int a;
             while((linea = bRead.readLine()) != null) {                 //Ciclo che continua fintanto che non trova una linea nulla
@@ -137,20 +137,20 @@ public class Download {
                 linea = linea.replace("c", "");      //Sostituisce "c" con ""
                 linea = linea.replace("u", "");      //Sostituisce "u" con ""
                 linea = linea.replace("b","");
-                String[] lineaSplittata = linea.trim().split(TAB_DELIMITER);             //Separa la linea tutte le volte che incontra il tab
+                String[] lineaSplittata = linea.trim().split(TAB_DELIMITER);                     //Separa la linea tutte le volte che incontra il tab
                 String c_resid = lineaSplittata[0].trim();                                     //Trim toglie gli spazi prima e dopo la stringa
                 String unit = lineaSplittata[1].trim();
                 String nace_r2 = lineaSplittata[2].trim();
                 String geo = lineaSplittata[3].trim();
                 double[] valori = new double[NottiNazione.differenza_anni];
                 for(int i = 0; i < NottiNazione.differenza_anni; i++) {
-                    if (4 + i < lineaSplittata.length)                               //Gestione errore java.lang.ArrayIndexOutOfBoundsException
+                    if (4 + i < lineaSplittata.length)                                      //Gestione errore java.lang.ArrayIndexOutOfBoundsException
                         valori[i] = Double.parseDouble(lineaSplittata[4 + i].trim());       //Inserisce i valori della tabella dentro il vettore
                     else
                         valori[i] = 0;                                                      //Per i valori che non ci sono dopo lineaSplittata aggiunge "0"
                 }
                 NottiNazione oggettoParsato = new NottiNazione(c_resid, unit, nace_r2, geo, valori);
-                record.add(oggettoParsato);         //Aggiungo oggettoParsato alla lista
+                record.add(oggettoParsato);                                          //Aggiungo oggettoParsato alla lista
             }
         } catch (IOException e){
             e.printStackTrace();
@@ -164,20 +164,20 @@ public class Download {
      * @throws IOException
      */
     private void Metadata(String fileTSV) throws IOException {
-        Field[] fields = NottiNazione.class.getDeclaredFields();    //Estrae le variabili della classe NottiNazione
+        Field[] fields = NottiNazione.class.getDeclaredFields();            //Estrae le variabili della classe NottiNazione
         BufferedReader bR = new BufferedReader(new FileReader(fileTSV));         //Apre il bufferedReader
-        String linea = bR.readLine();           //Legge la prima riga
-        linea = linea.replace(",", TAB_DELIMITER);     //Sostituisce alla prima linea tutte le "," con "\t"
-        linea = linea.replace("\\", TAB_DELIMITER);     //Sostituisce alla prima linea \ con tab
-        String[] lineaSplittata = linea.trim().split(TAB_DELIMITER);     //Separa la stringa tutte le volte che incontra "\t"
+        String linea = bR.readLine();                                        //Legge la prima riga
+        linea = linea.replace(",", TAB_DELIMITER);                    //Sostituisce alla prima linea tutte le "," con "\t"
+        linea = linea.replace("\\", TAB_DELIMITER);                   //Sostituisce alla prima linea \ con tab
+        String[] lineaSplittata = linea.trim().split(TAB_DELIMITER);         //Separa la stringa tutte le volte che incontra "\t"
         int i = 0;
 
         for (Field f : fields) {
             Map<String, String> map = new HashMap<>();
-            map.put("Alias", f.getName());      //Aggiunge alla mappa la chiave alias
-            map.put("SourceField", lineaSplittata[i]);    //Prende il nome del campo nel file tsv
-            map.put("Type", f.getType().getSimpleName());   //Prende il tipo di dato e lo inserisce nella mappa
-            Lista.add(map);             //Aggiunge la mappa alla lista "Lista"
+            map.put("Alias", f.getName());                       //Aggiunge alla mappa la chiave alias
+            map.put("SourceField", lineaSplittata[i]);          //Prende il nome del campo nel file tsv
+            map.put("Type", f.getType().getSimpleName());         //Prende il tipo di dato e lo inserisce nella mappa
+            Lista.add(map);                                    //Aggiunge la mappa alla lista "Lista"
             i++;
         }
     }
@@ -256,6 +256,7 @@ public class Download {
         }
         return listField; //ritorno la lista
     }
+
 
 
 
