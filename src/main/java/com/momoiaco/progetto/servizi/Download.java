@@ -272,5 +272,6 @@ public class Download {
         }
         return list;
     }
-    
+
+    //CREARE METODO GET PER LA RESTITUZIONE DI UNA LISTA DI OGGETTI FILTRATI
 }

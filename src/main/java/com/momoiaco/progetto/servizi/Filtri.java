@@ -25,40 +25,39 @@ public abstract class Filtri {
      */
 
     private static boolean check(Object value, String operation, Object reference) {
-        if (operatori.contains(operation)) { // verifica che l'operatore sia uno di quelli gestiti
-            if (value instanceof Number) { // caso in cui il valore da controllare sia un numero
-                double valueNum = ((Number) value).doubleValue();//cast in double
-                if (reference instanceof Number) {//caso in cui anche il riferimento sia un numero
-                    double rifNum = ((Number) reference).doubleValue();//cast in double
+        if (operatori.contains(operation)) {                                //Verifica che l'operatore sia uno di quelli corretti
+            if (value instanceof Number) {                                  //Caso in cui il valore da controllare sia un numero
+                double valueNum = ((Number) value).doubleValue();           //Cast in double
+                if (reference instanceof Number) {                          //Caso in cui anche il riferimento sia un numero
+                    double rifNum = ((Number) reference).doubleValue();     //Cast in double
                     switch (operation) {
-                        case "$not":
+                        case "$not":                                        //Logical Operator not
                             return valueNum != rifNum;
-                        case "$gt":
+                        case "$gt":                                         //Conditional Operator greater
                             return valueNum > rifNum;
-                        case "$gte":
+                        case "$gte":                                        //Conditional Operator greater equal
                             return valueNum >= rifNum;
-                        case "$lt":
+                        case "$lt":                                         //Conditional Operator lighter
                             return valueNum < rifNum;
-                        case "$lte":
+                        case "$lte":                                        //Conditional Operator lighter equal
                             return valueNum <= rifNum;
                         default:
                             String erroreOper = "L'operatore: '" + operation + "' risulta non funzionante per gli operandi: '" + value + "' , '" + reference + "'";
                             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, erroreOper);//restituisce il messaggio di errore in formato JSON
                     }
-                } else if (reference instanceof List) { // riferimento risulta essere una lista
+                } else if (reference instanceof List) {                     //Riferimento risulta essere una lista
                     List rifL = ((List) reference);
-                    if (!rifL.isEmpty() && rifL.get(0) instanceof Number) { // la lista deve essere non vuota e deve contenere numeri
-
-                        List<Double> leftReferenceNum = new ArrayList<>();//conversione
+                    if (!rifL.isEmpty() && rifL.get(0) instanceof Number) {             //La lista deve essere non vuota e deve contenere numeri
+                        List<Double> leftReferenceNum = new ArrayList<>();      //Conversione
                         for (Object elem : rifL) {
-                            leftReferenceNum.add(((Number) elem).doubleValue());// conversione di ogni singolo elemento
+                            leftReferenceNum.add(((Number) elem).doubleValue());        //Conversione di ogni singolo elemento
                         }
                         switch (operation) {
-                            case "$in":
+                            case "$in":                                      //Logical Operator match any value in array
                                 return leftReferenceNum.contains(valueNum);
-                            case "$nin":
+                            case "$nin":                                     //Logical Operator not match any value in array
                                 return !leftReferenceNum.contains(valueNum);
-                            case "$bt":
+                            case "$bt":                                      //Conditional Operator   greater equal value lighter equal
                                 double first = leftReferenceNum.get(0);
                                 double second = leftReferenceNum.get(1);
                                 return valueNum >= first && valueNum <= second;
@@ -70,10 +69,8 @@ public abstract class Filtri {
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Lista vuota o non numerica");
                 } else
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Il riferimento: '" + reference + "' non è compatibile con il valore: '" + value + "'");
-            } else if (value instanceof String || value instanceof Character) {// il valore da controllare è un carattere
-                if(value instanceof Character)
-                    value=String.valueOf(value);// riporto il carattere ad una stringa
-                String valueStr = ((String) value);//conversione
+            } else if (value instanceof String ) {      //Il valore da controllare è una stringa
+                String valueStr = (String) value;
                 if (reference instanceof String) {
                     String rifStr = ((String) reference);
                     if (operation == "$not") {
@@ -83,9 +80,9 @@ public abstract class Filtri {
                             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, erroreOper);
                     }
                 } else {
-                    if (reference instanceof List) {// il riferimento è una lista
+                    if (reference instanceof List) {                                        //Il riferimento è una lista
                     List rifList = ((List) reference);
-                    if (!rifList.isEmpty() && rifList.get(0) instanceof String) {//la lista deve essere non vuota e deve contenere stringhe per poter effettuare la conversione da una lista generica ad una lista di stringhe
+                    if (!rifList.isEmpty() && rifList.get(0) instanceof String) {           //La lista deve essere non vuota e deve contenere stringhe per poter effettuare la conversione da una lista generica ad una lista di stringhe
                            List<String> rifLStr = new ArrayList<>();
                         String valueStr = ((String) value);
                         for (Object elem : rifList) {
@@ -124,10 +121,10 @@ public abstract class Filtri {
     public static List<NottiNazione> filtra(List val, String oper, Object rif) {
         List<NottiNazione> filtrati = new ArrayList<>();
         for (int i = 0; i < val.size(); i++) {
-            if (check(val.get(i), oper, rif))//controllo per ogni elemento della lista
+            if (check(val.get(i), oper, rif))                               //Controllo per ogni elemento della lista
                 filtrati.add((NottiNazione) val.get(i));
         }
-        return filtrati; // restituisco la lista con gli indici
+        return filtrati;                                                    //Restituisco la lista con gli indici
     }
 }
 

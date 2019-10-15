@@ -3,12 +3,10 @@ package com.momoiaco.progetto.controllo;
 import com.momoiaco.progetto.modello.NottiNazione;
 import com.momoiaco.progetto.servizi.Download;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class NottiNazioneControllo {
@@ -74,6 +72,29 @@ public class NottiNazioneControllo {
             return service.getField(nameField);
         }
     }
+
+    //METODI POST
+
+    //CREARE METODO GETFILTEREDSTATISTICS
+
+    //CREARE PARSING FILTRO
+
+    @PostMapping("/getFilteredRecord")
+    public List getFilteredRecord(@RequestBody String body){
+        Map<String, Object> filter = parsingFiltro (body);
+        String nameField = (String) filter.get("field");
+        String oper = (String) filter.get("oper");
+        Object rif = filter.get("rif");
+        return service.getFilteredRecord(nameField, oper, rif);
+    }
+
+
+
+
+
+
+
+
 
 
 
