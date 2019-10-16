@@ -32,12 +32,12 @@ public class Download {
     private static List<NottiNazione> record = new ArrayList<>();        //Lista di oggetti NottiNazione
     private final static String TAB_DELIMITER = "\t";
     private static List<Map> Lista = new ArrayList();                    //Lista per i Metadata
-    static List<String> time = new ArrayList<>();
+    private static List<String> time = new ArrayList<>();
 
     /**
      * Costruttore della classe Download
      *
-     * @throws IOException
+     * @throws IOException lancia l'eccezione se ci sono errori nell'input o nell'output
      */
     public Download() throws IOException {
         String fileTSV = "dataset.tsv";
@@ -84,7 +84,7 @@ public class Download {
                 }
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
-            } catch (Exception e) {
+            } catch (Exception e){
                 e.printStackTrace();
             }
         }
@@ -97,9 +97,9 @@ public class Download {
      *
      * @param url url del sito dal quale scaricare il file
      * @param fileName nome del file
-     * @throws Exception
+     * @throws Exception lancia l'eccezione nel caso in cui ci fossero degli errori interni al metodo
      */
-    public static void downloadTSV(String url, String fileName) throws Exception {
+    private static void downloadTSV(String url, String fileName) throws Exception {
         HttpURLConnection openConnection = (HttpURLConnection) new URL(url).openConnection();
         openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
         InputStream in = openConnection.getInputStream();
@@ -161,7 +161,7 @@ public class Download {
      * Metodo per la creazione dei metadati
      *
      * @param fileTSV   Stringa con il nome del file tsv
-     * @throws IOException
+     * @throws IOException lancia l'eccezione nel caso in cui l'input o l'output fosse sbagliato
      */
     private void Metadata(String fileTSV) throws IOException {
         Field[] fields = NottiNazione.class.getDeclaredFields();            //Estrae le variabili della classe NottiNazione
@@ -210,8 +210,8 @@ public class Download {
     /**
      * Metodo che restituisce il record all'indice i
      *
-     * @param i
-     * @return
+     * @param i indice del record
+     * @return restituisce il record all'indice i
      */
     public NottiNazione getRecord(int i){
         if(i < record.size()) return record.get(i);
