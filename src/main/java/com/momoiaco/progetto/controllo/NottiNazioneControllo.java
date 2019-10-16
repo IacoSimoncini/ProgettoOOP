@@ -2,11 +2,14 @@ package com.momoiaco.progetto.controllo;
 
 import com.momoiaco.progetto.modello.NottiNazione;
 import com.momoiaco.progetto.servizi.Download;
+import com.momoiaco.progetto.servizi.Filtri;
 import com.momoiaco.progetto.servizi.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.BasicJsonParser;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +74,18 @@ public class NottiNazioneControllo {
     public Map getStatistiche(@RequestParam(value = "Field", required = false, defaultValue = "") String nameField) {
         return Statistics.getAllStatistics(nameField, service.getField(nameField));
     }
-    
+
+
+    @PostMapping("/getFilteredStatistiche")
+    public Map getFilteredStatistiche(@RequestParam(value = "Field", required = false, defaultValue = "") String fieldStatistics, @RequestBody String body){
+        Map<String, Object> filter = parsingFilter(body);
+        List<NottiNazione> filteredRecord = new ArrayList<>();
+        List<Integer> filteredIndici = Filtri.filtra(service.getField((String) filter.get("Field")), (String) filter.get("Operator"), filter.get("Reference"));
+        for(int i : filteredIndici){
+            filteredRecord.add(service.getRecord(i));
+        }
+        return Statistics.getAllStatistics(fieldStatistics, filteredRecord);
+    }
 
 
     /**
@@ -83,9 +97,9 @@ public class NottiNazioneControllo {
     @PostMapping("/getFilteredRecord")
     public List getFilteredRecord(@RequestBody String body){
         Map<String, Object> filter = parsingFilter(body);
-        String nameField = (String) filter.get("field");
-        String oper = (String) filter.get("operator");
-        Object reference = filter.get("reference");
+        String nameField = (String) filter.get("Field");
+        String oper = (String) filter.get("Operator");
+        Object reference = filter.get("Reference");
         return service.getFilteredRecord(nameField, oper, reference);
     }
 
@@ -112,10 +126,25 @@ public class NottiNazioneControllo {
             reference = value;
         }
         Map<String, Object> filter = new HashMap<>();
-        filter.put("operator", operator);
-        filter.put("reference", reference);
-        filter.put("field", nameField);
+        filter.put("Operator", operator);
+        filter.put("Reference", reference);
+        filter.put("Field", nameField);
         return filter;
     }
 
+    /*public Map<String, Object> parsingFilter(String body){
+        Map<String, Object> parsedBody = new HashMap<>();
+        String nameField;
+        String operator;
+        Object reference;
+        String[] parsedString = body.trim().split(";");
+        nameField = parsedString[0];
+        operator = parsedString[1];
+        reference = parsedString[2];
+        parsedBody.put("Field", nameField);
+        parsedBody.put("Operator", operator);
+        parsedBody.put("Reference", reference);
+        return parsedBody;
+    }
+*/
 }

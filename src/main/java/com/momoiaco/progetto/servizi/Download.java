@@ -289,11 +289,11 @@ public class Download {
      * @return
      */
     public List<NottiNazione> getFilteredRecord(String nameField, String operator, Object reference) {
-        List<NottiNazione> filteredList = Filtri.filtra(getField(nameField), operator, reference);
-        /**List<NottiNazione> filtered = new ArrayList<>();
-        for (NottiNazione Notti : filteredList) {
-            filtered.add(record.
-        }*/
-        return filteredList;
+        List<Integer> filteredList = Filtri.filtra(getField(nameField), operator, reference);
+        List<NottiNazione> filtered = new ArrayList<>();
+        for (int i : filteredList) {
+            filtered.add(record.get(i));
+        }
+        return filtered;
     }
 }

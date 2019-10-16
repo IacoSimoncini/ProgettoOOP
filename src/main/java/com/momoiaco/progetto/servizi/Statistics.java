@@ -106,17 +106,17 @@ public abstract  class Statistics {
     /**
      * Metodo get che restituisce tutte le statistiche relative ad un campo
      *
-     * @param nomeCampo
-     * @param lista
+     * @param nameField
+     * @param list
      * @return
      */
-    public static Map<String, Object> getAllStatistics(String nomeCampo, List lista){
+    public static Map<String, Object> getAllStatistics(String nameField, List list){
         Map<String, Object> mappa = new HashMap<>();
-        mappa.put("field",nomeCampo);
-        if(!lista.isEmpty()){                                       //Se la lista non è vuota
-            if(lista.get(0) instanceof Number){
+        mappa.put("field",nameField);
+        if(!list.isEmpty()){                                       //Se la lista non è vuota
+            if(list.get(0) instanceof Number){
                 List<Double> listaNumer = new ArrayList<>();
-                for(Object oggetto : lista){                        //Ciclo che scorre gli oggetti
+                for(Object oggetto : list){                        //Ciclo che scorre gli oggetti
                     listaNumer.add((Double) oggetto);
                 }
                 mappa.put("avg", avg(listaNumer));
@@ -125,10 +125,9 @@ public abstract  class Statistics {
                 mappa.put("std", devStd(listaNumer));
                 mappa.put("sum", sum(listaNumer));
                 mappa.put("count", count(listaNumer));
-                return mappa;
             } else {
-                mappa.put("elementiUnici", contaElementiUnici(lista));
-                mappa.put("count", count(lista));
+                mappa.put("elementiUnici", contaElementiUnici(list));
+                mappa.put("count", count(list));
             }
         }
         return mappa;
