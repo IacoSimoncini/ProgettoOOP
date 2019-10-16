@@ -3,8 +3,8 @@ package com.momoiaco.progetto.modello;
 import java.io.Serializable;
 
 /**
- * @author Iacopo Simoncini, Mohammad Wafa
  * Classe modellante dataset
+ *
  */
 public class NottiNazione implements Serializable {     //Serializable permette di salvare gli oggetti della classe su file
 

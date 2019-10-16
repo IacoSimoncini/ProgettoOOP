@@ -71,18 +71,17 @@ public abstract class Filtri {
                 String valueStr = (String) value;
                 if (reference instanceof String) {
                     String rifStr = ((String) reference);
-                    if (operation == "$not") {
+                    if (operation.equals("$not"))
                         return  !valueStr.equals(rifStr);
+                    else {
+                        String erroreOper = "L'operatore:'" + operation + "' risulta inadatto per gli operandi: '" + value + "' , '" + reference + "'";
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, erroreOper);
                     }
-                            String erroreOper = "L'operatore:'" + operation + "' risulta inadatto per gli operandi: '" + value + "' , '" + reference + "'";
-                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, erroreOper);
                     }
-                } else {
-                    if (reference instanceof List) {                                        //Il riferimento è una lista
+                 else if (reference instanceof List) {                                        //Il riferimento è una lista
                     List rifList = ((List) reference);
                     if (!rifList.isEmpty() && rifList.get(0) instanceof String) {           //La lista deve essere non vuota e deve contenere stringhe per poter effettuare la conversione da una lista generica ad una lista di stringhe
                            List<String> rifLStr = new ArrayList<>();
-                        String valueStr = ((String) value);
                         for (Object elem : rifList) {
                             rifLStr.add((String) elem);
                         }
@@ -98,11 +97,11 @@ public abstract class Filtri {
                     } else
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La lista è vuota");
                 } else
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Riferimento:'" + reference + "' non compatibile con il valore'" + value + "'");
-            }
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valore da controllare non valido: '" + value + "'");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Riferimento:'" + reference + "' non adatto al valore'" + value + "'");
+            } else
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valore: '" + value + "'" + " non valido");
         } else
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Operatore " + operation + " non è valido");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Operatore " + operation + " non valido");
     }
 
     /**

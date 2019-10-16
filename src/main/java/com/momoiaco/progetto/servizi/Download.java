@@ -219,10 +219,10 @@ public class Download {
     }
 
     /**
+     * Metodo che restituisce la lista con i valori di un certo campo dei record
      *
-     *
-     * @param nomeCampo
-     * @return
+     * @param nomeCampo nome del campo rispetto a cui si vogliono ottenere i valori
+     * @return lista con i valori del campo
      */
     public List getField(String nomeCampo) {
         List<Object> listField = new ArrayList<>(); //inizializzo lista che conterrà i valori del campo
@@ -262,9 +262,9 @@ public class Download {
     }
 
     /**
+     * Metodo che restituisce la lista di tutte le statistiche relative a tutti i campi
      *
-     *
-     * @return
+     * @return lista delle statistiche
      */
     public List<Map> getAllFieldStatistics(){
         Field[] fields = NottiNazione.class.getDeclaredFields();
@@ -281,12 +281,12 @@ public class Download {
     }
 
     /**
+     * Metodo che restituisce il record filtrato rispetto al nome del campo, operatore e reference
      *
-     *
-     * @param nameField
-     * @param operator
-     * @param reference
-     * @return
+     * @param nameField nome del campo passato dall'utente
+     * @param operator operatore passato dall'utente
+     * @param reference oggetto passato dall'utente
+     * @return restituisce la lista con gli oggetti filtrati
      */
     public List<NottiNazione> getFilteredRecord(String nameField, String operator, Object reference) {
         List<Integer> filteredList = Filtri.filtra(getField(nameField), operator, reference);

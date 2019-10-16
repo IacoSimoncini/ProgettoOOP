@@ -5,6 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.IOException;
 
+/**
+ * @author Iacopo Simoncini, Mohammad Wafa
+ *
+ */
 @SpringBootApplication
 public class ProgettoApplication {
 

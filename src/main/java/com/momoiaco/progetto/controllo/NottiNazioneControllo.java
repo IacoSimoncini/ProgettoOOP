@@ -102,7 +102,7 @@ public class NottiNazioneControllo {
      * Metodo get che restituisce il record filtrato passando il body al metodo
      *
      * @param body body
-     * @return
+     * @return restituisce il record filtrato
      */
     @PostMapping("/getFilteredRecord")
     public List getFilteredRecord(@RequestBody String body){
@@ -128,15 +128,15 @@ public class NottiNazioneControllo {
         if(value instanceof Map){
             Map filter = (Map) value;                                                           //Inserisce in filter value castandolo come mappa
             operator = ((String) filter.keySet().toArray()[0]).toLowerCase();
-            reference = filter.get(operator);
-        } else {
+            reference = filter.get(operator);                                                   //Inserisce in reference il valore rispetto alla chiave operator
+        } else {                                                                                //Nel caso in cui l'if sia falso effettua l'operazione tramite l'operatore $gte
             operator = "$gte";
             reference = value;
         }
         Map<String, Object> filter = new HashMap<>();
-        filter.put("Operator", operator);
-        filter.put("Reference", reference);
-        filter.put("Field", nameField);
+        filter.put("Operator", operator);                                                       //Inserisce nella mappa come chiave Operator e come valore corrispondente il valore contenuto in operator
+        filter.put("Reference", reference);                                                     //Inserisce nella mappa come chiave Reference e come valore corrispondente il valore contenuto in reference
+        filter.put("Field", nameField);                                                         //Inserisce nella mappa come chiave Field e come valore corrispondente il valore contenuto in nameField
         return filter;
     }
 }
