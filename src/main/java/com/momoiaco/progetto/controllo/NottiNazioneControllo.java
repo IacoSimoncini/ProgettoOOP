@@ -120,15 +120,13 @@ public class NottiNazioneControllo {
      * @return filter, restituisce la mappa filtro
      */
     public Map<String, Object> parsingFilter(String body){
-        Map<String, Object> bodyParsato = new BasicJsonParser().parseMap(body);
-        System.out.println(body);
+        Map<String, Object> bodyParsato = new BasicJsonParser().parseMap(body);                 //Effettua il parsing del body
         String nameField = bodyParsato.keySet().toArray(new String[0])[0];
-        System.out.println(nameField);
-        Object value = bodyParsato.get(nameField);
+        Object value = bodyParsato.get(nameField);                                              //Inserisce dentro value il nome del campo da bodyParsato
         String operator;
         Object reference;
         if(value instanceof Map){
-            Map filter = (Map) value;
+            Map filter = (Map) value;                                                           //Inserisce in filter value castandolo come mappa
             operator = ((String) filter.keySet().toArray()[0]).toLowerCase();
             reference = filter.get(operator);
         } else {
@@ -141,20 +139,4 @@ public class NottiNazioneControllo {
         filter.put("Field", nameField);
         return filter;
     }
-
-    /*public Map<String, Object> parsingFilter(String body){
-        Map<String, Object> parsedBody = new HashMap<>();
-        String nameField;
-        String operator;
-        Object reference;
-        String[] parsedString = body.trim().split(";");
-        nameField = parsedString[0];
-        operator = parsedString[1];
-        reference = parsedString[2];
-        parsedBody.put("Field", nameField);
-        parsedBody.put("Operator", operator);
-        parsedBody.put("Reference", reference);
-        return parsedBody;
-    }
-*/
 }

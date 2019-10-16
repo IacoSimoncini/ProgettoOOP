@@ -43,19 +43,19 @@ public abstract class Filtri {
                             String erroreOper = "L'operatore: '" + operation + "' risulta non funzionante per gli operandi: '" + value + "' , '" + reference + "'";
                             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, erroreOper);          //restituisce il messaggio di errore in formato JSON
                     }
-                } else if (reference instanceof List) {                     //Riferimento risulta essere una lista
+                } else if (reference instanceof List) {                                                     //Riferimento risulta essere una lista
                     List rifL = ((List) reference);
                     if (!rifL.isEmpty() && rifL.get(0) instanceof Number) {             //La lista deve essere non vuota e deve contenere numeri
-                        List<Double> leftReferenceNum = new ArrayList<>();      //Conversione
+                        List<Double> leftReferenceNum = new ArrayList<>();              //Conversione
                         for (Object elem : rifL) {
                             leftReferenceNum.add(((Number) elem).doubleValue());        //Conversione di ogni singolo elemento
                         }
                         switch (operation) {
-                            case "$in":                                      //Logical Operator match any value in array
+                            case "$in":                                                 //Logical Operator match any value in array
                                 return leftReferenceNum.contains(valueNum);
-                            case "$nin":                                     //Logical Operator not match any value in array
+                            case "$nin":                                                //Logical Operator not match any value in array
                                 return !leftReferenceNum.contains(valueNum);
-                            case "$bt":                                      //Conditional Operator   greater equal value lighter equal
+                            case "$bt":                                                 //Conditional Operator   greater equal value lighter equal
                                 double first = leftReferenceNum.get(0);
                                 double second = leftReferenceNum.get(1);
                                 return valueNum >= first && valueNum <= second;
@@ -67,7 +67,7 @@ public abstract class Filtri {
                         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Lista vuota o non numerica");
                 } else
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Il riferimento: '" + reference + "' non è compatibile con il valore: '" + value + "'");
-            } else if (value instanceof String ) {      //Il valore da controllare è una stringa
+            } else if (value instanceof String ) {                                      //Il valore da controllare è una stringa
                 String valueStr = (String) value;
                 if (reference instanceof String) {
                     String rifStr = ((String) reference);
@@ -87,7 +87,7 @@ public abstract class Filtri {
                             rifLStr.add((String) elem);
                         }
                         switch (operation) {
-                            case "$in":
+                            case "$in":                                                     //
                                 return rifLStr.contains(valueStr);
                             case "$nin":
                                 return !rifLStr.contains(valueStr);
@@ -103,10 +103,6 @@ public abstract class Filtri {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valore da controllare non valido: '" + value + "'");
         } else
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Operatore " + operation + " non è valido");
-    }
-
-    public static List<String> getOperatori() {
-        return operatori;
     }
 
     /**
