@@ -69,24 +69,34 @@ public class NottiNazioneControllo {
         return service.getRecord(i);
     }
 
-
+    /**
+     * Metodo GET che su richiesta dell'utente restituisce tutte le statistiche relative ad un campo
+     *
+     * @param nameField nome del campo inserito dall'utente
+     * @return restituisce tutte le statistiche relative al campo nameField
+     */
     @GetMapping("/getStatistiche")
     public Map getStatistiche(@RequestParam(value = "Field", required = false, defaultValue = "") String nameField) {
         return Statistics.getAllStatistics(nameField, service.getField(nameField));
     }
 
-
+    /**
+     * Metodo POST che su richiesta dell'utente restituisce le statistiche filtrate relative ad un campo
+     *
+      * @param fieldStatistics
+     * @param body il JSON passato dall'utente con i relativi campo, operatore e riferimento
+     * @return restituice le statistiche filtrate di un campo inserito dall'utente
+     */
     @PostMapping("/getFilteredStatistiche")
     public Map getFilteredStatistiche(@RequestParam(value = "Field", required = false, defaultValue = "") String fieldStatistics, @RequestBody String body){
-        Map<String, Object> filter = parsingFilter(body);
+        Map<String, Object> filter = parsingFilter(body);                               //Effettua il parsing del body
         List<NottiNazione> filteredRecord = new ArrayList<>();
-        List<Integer> filteredIndici = Filtri.filtra(service.getField((String) filter.get("Field")), (String) filter.get("Operator"), filter.get("Reference"));
-        for(int i : filteredIndici){
+        List<Integer> filteredIndici = Filtri.filtra(service.getField((String) filter.get("Field")), (String) filter.get("Operator"), filter.get("Reference"));         //Richiama la funzione filtra all'interno della classe Filtri che filtra il campo passato dall'utente insieme all'operatore e al riferimento
+        for(int i : filteredIndici){                //For each che inserisce all'interno della lista filteredRecord tutti gli elementi del record filtrati
             filteredRecord.add(service.getRecord(i));
         }
         return Statistics.getAllStatistics(fieldStatistics, filteredRecord);
     }
-
 
     /**
      * Metodo get che restituisce il record filtrato passando il body al metodo
@@ -96,15 +106,15 @@ public class NottiNazioneControllo {
      */
     @PostMapping("/getFilteredRecord")
     public List getFilteredRecord(@RequestBody String body){
-        Map<String, Object> filter = parsingFilter(body);
-        String nameField = (String) filter.get("Field");
-        String oper = (String) filter.get("Operator");
-        Object reference = filter.get("Reference");
-        return service.getFilteredRecord(nameField, oper, reference);
+        Map<String, Object> filter = parsingFilter(body);               //Effettua il parsing del body
+        String nameField = (String) filter.get("Field");                //Inserisce all'interno della variabile nameField il campo passato dall'utente
+        String oper = (String) filter.get("Operator");                  //Inserisce all'interno della variabile l'operatore passato dall'utente
+        Object reference = filter.get("Reference");                     //Inserisce all'interno di reference l'oggetto passato dall'utente
+        return service.getFilteredRecord(nameField, oper, reference);      //Richiama la funzione getFilteredRecord della classe Download
     }
 
     /**
-     * Metodo che effettua il parsing del filtro
+     * Metodo che effettua il parsing JSON del filtro
      *
      * @param body body
      * @return filter, restituisce la mappa filtro

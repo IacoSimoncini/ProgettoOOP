@@ -12,17 +12,16 @@ import java.util.List;
  * Classe Filtri per gestione dei operatori di confronto e operatori logici.
  */
 public abstract class Filtri {
-    // operatori di confronto
-    private static final List<String> operatori = Arrays.asList("$not", "$in", "$nin", "$and", "$or", "$gt", "$gte", "$lt", "$lte", "$bt");
+    private static final List<String> operatori = Arrays.asList("$not", "$in", "$nin", "$and", "$or", "$gt", "$gte", "$lt", "$lte", "$bt");     //Operatori utilizzati per filtrare le statistiche
 
     /**
-     *  Metodo il quale in base all'operatore inserito, il valore value e il riferimento reference vengono confrontati.
+     * Metodo che permette in base ai parametri inseriti (value, operation, reference) di filtrare le statistiche del dataset
+     *
      * @param value valore del campo
      * @param operation operatore
      * @param reference valore di riferimento
      * @return boolean
      */
-
     private static boolean check(Object value, String operation, Object reference) {
         if (operatori.contains(operation)) {                                //Verifica che l'operatore sia uno di quelli corretti
             if (value instanceof Number) {                                  //Caso in cui il valore da controllare sia un numero
@@ -112,15 +111,16 @@ public abstract class Filtri {
 
     /**
      * Metodo per l'applicazione dei filtri ad una lista.
+     *
      * @param val lista dei valori
      * @param oper operatore
-     * @param rif valore di riferimento
+     * @param reference valore di riferimento
      * @return lista che soddisfano il filtro
      */
-    public static List<Integer> filtra(List val, String oper, Object rif) {
+    public static List<Integer> filtra(List val, String oper, Object reference) {
         List<Integer> filtrati = new ArrayList<>();
         for (int i = 0; i < val.size(); i++) {
-            if (check(val.get(i), oper, rif))                               //Controllo per ogni elemento della lista
+            if (check(val.get(i), oper, reference))                               //Controllo per ogni elemento della lista
                 filtrati.add(i);
         }
         return filtrati;                                                    //Restituisco la lista con gli indici

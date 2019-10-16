@@ -12,9 +12,9 @@ import java.util.Map;
 public abstract  class Statistics {
 
     /**
-     * Metodo avg
+     * Metodo avg che effettua la media degli elementi all'interno della lista
      *
-     * @param lista
+     * @param lista lista di double
      * @return  restituisce la media della lista
      */
     public static double avg (List<Double> lista){
@@ -22,9 +22,9 @@ public abstract  class Statistics {
     }
 
     /**
-     * Metodo min
+     * Metodo min che calcola il minimo all'interno della lista
      *
-     * @param lista
+     * @param lista lista di double
      * @return restituisce il minimo della lista
      */
     public static double min(List<Double> lista) {
@@ -36,9 +36,9 @@ public abstract  class Statistics {
     }
 
     /**
-     * Metodo max
+     * Metodo max che calcola il massimo di una lista
      *
-     * @param lista
+     * @param lista lista di double
      * @return restituisce il massimo di una lista
      */
     public static double max (List<Double> lista) {
@@ -50,9 +50,9 @@ public abstract  class Statistics {
     }
 
     /**
-     * Metodo devStd
+     * Metodo devStd che calcola la deviazione standard
      *
-     * @param lista
+     * @param lista lista di double
      * @return restituisce la deviazione standard
      */
     public static double devStd(List<Double> lista) {
@@ -65,9 +65,9 @@ public abstract  class Statistics {
     }
 
     /**
-     * Metodo sum
+     * Metodo sum che calcola la somma di tutti gli elementi all'interno della lista
      *
-     * @param lista
+     * @param lista lista di double
      * @return restituisce la somma degli elementi della lista
      */
     public static double sum(List<Double> lista) {
@@ -79,9 +79,9 @@ public abstract  class Statistics {
     }
 
     /**
-     * Metodo count
+     * Metodo count che restituisce la lunghezza della lista
      *
-     * @param lista
+     * @param lista lista
      * @return restituisce la lunghezza della lista
      */
     public static int count(List lista){
@@ -89,9 +89,9 @@ public abstract  class Statistics {
     }
 
     /**
-     * Metodo contaElementiUnici
+     * Metodo contaElementiUnici che conta quante volte un elemento è inserito all'interno di una lista
      *
-     * @param lista
+     * @param lista lista
      * @return restituisce il numero degli elementi unici
      */
     public static Map<Object,Integer> contaElementiUnici(List lista){
@@ -106,9 +106,9 @@ public abstract  class Statistics {
     /**
      * Metodo get che restituisce tutte le statistiche relative ad un campo
      *
-     * @param nameField
-     * @param list
-     * @return
+     * @param nameField nome del campo
+     * @param list lista
+     * @return restituisce una mappa con tutte le statistiche relative al campo inserito
      */
     public static Map<String, Object> getAllStatistics(String nameField, List list){
         Map<String, Object> mappa = new HashMap<>();
