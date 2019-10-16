@@ -1,6 +1,5 @@
 package com.momoiaco.progetto;
 
-import com.momoiaco.progetto.servizi.Download;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -16,7 +15,6 @@ public class ProgettoApplication {
      * @param args
      */
 	public static void main(String[] args) throws IOException {
-        new Download();         //Fa partire il costruttore della classe Download
         SpringApplication.run(ProgettoApplication.class, args);          //Avvia il server in locale
 	}
 

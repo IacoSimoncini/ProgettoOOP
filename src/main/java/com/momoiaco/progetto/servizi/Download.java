@@ -82,7 +82,6 @@ public class Download {
                         }
                     }
                 }
-                System.out.println("OK");
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
             } catch (Exception e) {
@@ -144,8 +143,9 @@ public class Download {
                 String geo = lineaSplittata[3].trim();
                 double[] valori = new double[NottiNazione.differenza_anni];
                 for(int i = 0; i < NottiNazione.differenza_anni; i++) {
-                    if (4 + i < lineaSplittata.length)                                      //Gestione errore java.lang.ArrayIndexOutOfBoundsException
+                    if (4 + i < lineaSplittata.length) {                                  //Gestione errore java.lang.ArrayIndexOutOfBoundsException
                         valori[i] = Double.parseDouble(lineaSplittata[4 + i].trim());       //Inserisce i valori della tabella dentro il vettore
+                    }
                     else
                         valori[i] = 0;                                                      //Per i valori che non ci sono dopo lineaSplittata aggiunge "0"
                 }

@@ -71,9 +71,7 @@ public class NottiNazioneControllo {
     public Map getStatistiche(@RequestParam(value = "Field", required = false, defaultValue = "") String nameField) {
         return Statistics.getAllStatistics(nameField, service.getField(nameField));
     }
-
-    //METODI POST
-
+    
 
 
     /**
@@ -99,7 +97,9 @@ public class NottiNazioneControllo {
      */
     public Map<String, Object> parsingFilter(String body){
         Map<String, Object> bodyParsato = new BasicJsonParser().parseMap(body);
+        System.out.println(body);
         String nameField = bodyParsato.keySet().toArray(new String[0])[0];
+        System.out.println(nameField);
         Object value = bodyParsato.get(nameField);
         String operator;
         Object reference;
